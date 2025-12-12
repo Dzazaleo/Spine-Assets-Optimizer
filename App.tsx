@@ -10,7 +10,7 @@ import { UnusedAssetsCard } from './components/UnusedAssetsCard';
 import { AtlasPreviewModal } from './components/AtlasPreviewModal';
 import { AnalysisProgressModal } from './components/AnalysisProgressModal';
 import { TrackConfigModal } from './components/TrackConfigModal';
-import { SpineJson, AnalysisReport, FileAsset, OptimizationTask, OptimizerConfig, AtlasAssetMap, TrackItem, SkinDoc, EventDoc, BoneDoc, SpineProject, AtlasRegion, AnalysisResult } from './types';
+import { AnalysisReport, FileAsset, OptimizationTask, OptimizerConfig, AtlasAssetMap, TrackItem, SkinDoc, EventDoc, BoneDoc, SpineProject, AtlasRegion, AnalysisResult } from './types';
 import { analyzeSpineData, extractCanonicalDimensions, mergeAnalysisReports, getImplicitlyUsedAtlasPages } from './utils/spineParser';
 import { calculateOptimizationTargets, generateOptimizedZip } from './utils/optimizer';
 import { packAtlases } from './utils/atlasPacker';
@@ -567,7 +567,9 @@ export default function App() {
     let downloadName = `spine-optimizer-config-${dateStr}.json`;
     if (loadedSkeletons.size === 1) {
         const first = loadedSkeletons.values().next().value;
-        downloadName = `spine-optimizer-config-${first.id}-${dateStr}.json`;
+        if (first) {
+            downloadName = `spine-optimizer-config-${first.id}-${dateStr}.json`;
+        }
     }
 
     a.download = downloadName;
@@ -794,7 +796,6 @@ export default function App() {
   const hasUserChanges = assetOverrides.size > 0 || localScaleOverrides.size > 0 || selectedKeys.size > 0;
 
   const activeImageCount = processedAssets.size;
-  const showSkeletonLabels = loadedSkeletons.size > 1;
 
   return (
     <div className="min-h-screen p-6 text-gray-100 bg-gray-900 md:p-12">
@@ -813,7 +814,7 @@ export default function App() {
           onFilesLoaded={handleFilesLoaded}
           onClear={handleClearAssets}
           stats={{
-            json: loadedSkeletons.size > 0 ? (loadedSkeletons.size === 1 ? loadedSkeletons.values().next().value.file.name : `${loadedSkeletons.size} Skeletons`) : undefined,
+            json: loadedSkeletons.size > 0 ? (loadedSkeletons.size === 1 ? loadedSkeletons.values().next().value?.file.name : `${loadedSkeletons.size} Skeletons`) : undefined,
             atlas: globalAtlasMetadata.size > 0 ? (globalAtlasMetadata.size + " Regions") : undefined,
             images: activeImageCount 
           }}
@@ -1091,7 +1092,7 @@ export default function App() {
         projectedAtlasCount={optimizationStats.atlasCount}
         
         // Metadata
-        skeletonName={loadedSkeletons.size === 1 ? loadedSkeletons.values().next().value.id : `${loadedSkeletons.size} Skeletons`}
+        skeletonName={loadedSkeletons.size === 1 ? (loadedSkeletons.values().next().value?.id || "Skeleton") : `${loadedSkeletons.size} Skeletons`}
         totalImages={report?.globalStats.length || 0}
         totalAnimations={report?.animations.length || 0}
       />

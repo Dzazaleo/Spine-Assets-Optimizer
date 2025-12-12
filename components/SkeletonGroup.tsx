@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Bone, FolderOpen } from 'lucide-react';
-import clsx from 'clsx';
+import { ChevronDown, ChevronUp, Bone } from 'lucide-react';
 
 interface SkeletonGroupProps {
   name: string;

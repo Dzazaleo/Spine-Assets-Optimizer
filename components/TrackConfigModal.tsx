@@ -3,7 +3,6 @@ import React, { useState, useMemo } from 'react';
 import { X, Plus, Trash2, GripVertical, Search, PlayCircle, FileText, MessageSquare, Layers, Bone, Zap, RotateCcw, AlertTriangle } from 'lucide-react';
 import { TrackItem, TrackAnimationConfig, SkinDoc, EventDoc, BoneDoc, ViewerData } from '../types';
 import { generateStandaloneHtml } from '../utils/htmlGenerator';
-import clsx from 'clsx';
 
 interface TrackConfigModalProps {
   isOpen: boolean;
